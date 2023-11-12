@@ -1,6 +1,13 @@
-import { analytics } from './modules/analytics.js'
+import express from 'express'
+import 'dotenv/config'
+import { authRouter } from './routs/auth.rout.js'
 
-const message: string = 'Hello node'
-console.log(message)
+const PORT = process.env.PORT || 3005
+const app = express()
 
-analytics('Main.ts!')
+app.use(authRouter)
+app.get('/', (req, res) => {
+  res.send('WORK!')
+})
+
+app.listen(PORT, () => console.log('server is running'))
