@@ -1,10 +1,11 @@
 import 'dotenv/config'
 import { sequelize } from './utils/db.js'
-import './modules/user.js'
-import './modules/costsList.js'
+import './models/User.js'
+import './models/costsList.js'
+import './models/Token.js'
 
 sequelize
-  .sync()
+  .sync({ force: true })
   .then(() => {
     console.log('Tables created successfully')
   })
