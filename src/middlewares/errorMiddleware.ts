@@ -1,25 +1,21 @@
-import { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
+import { ErrorRequestHandler, Request, Response } from 'express'
 import { ApiError } from '../exeption/api.error.js'
 
 export const errorMiddleware: ErrorRequestHandler = (
   error,
   req: Request,
   res: Response,
-  next: NextFunction,
 ) => {
   if (error instanceof ApiError) {
-    res.status(error.status).send({
-      message: error.message,
-      errors: error.errors,
-    })
+    const { status, message, errors } = error;
+
+    res.status(status).send({ message, errors });
+    return;
   }
 
-  if (error) {
-    res.statusCode = 500
-    res.send({
-      message: 'Server error',
-    })
-  }
+  console.debug(error);
 
-  next()
+  res.status(500).send({
+    message: 'Unexpected error',
+  });
 }

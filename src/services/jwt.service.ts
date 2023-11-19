@@ -6,7 +6,7 @@ interface Sign {
   email: string
 }
 
-function generateAccessToken(user: Sign) {
+const generateAccessToken = (user: Sign) => {
   if (!process.env.JWT_ACCESS_SECRET) {
     throw new Error('JWT_KEY is not defined in the environment variables')
   }
@@ -18,7 +18,7 @@ function generateAccessToken(user: Sign) {
   return token
 }
 
-function validateAccessToken(token: string) {
+const validateAccessToken = (token: string) => {
   if (!process.env.JWT_ACCESS_SECRET) {
     throw new Error('JWT_KEY is not defined in the environment variables')
   }
@@ -30,19 +30,19 @@ function validateAccessToken(token: string) {
   }
 }
 
-function generateRefreshToken(user: Sign) {
+const generateRefreshToken = (user: Sign) => {
   if (!process.env.JWT_REFRESH_SECRET) {
     throw new Error('JWT_KEY is not defined in the environment variables')
   }
 
   const token = jwt.sign(user, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: '35s',
+    expiresIn: '2500000s',
   })
 
   return token
 }
 
-function validateRefreshToken(token: string) {
+const validateRefreshToken = (token: string) => {
   if (!process.env.JWT_REFRESH_SECRET) {
     throw new Error('JWT_KEY is not defined in the environment variables')
   }

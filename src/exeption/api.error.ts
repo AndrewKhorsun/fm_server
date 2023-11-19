@@ -22,17 +22,17 @@ export class ApiError extends Error {
     })
   }
 
-  static unauthorized(errors?: Record<string, string>) {
+  static unauthorized(message?: string, errors?: Record<string, string>) {
     return new ApiError({
-      message: 'User is not authorized',
+      message: message ?? 'User is not authorized',
       errors,
       status: 401,
     })
   }
 
-  static notFound(errors?: Record<string, string>) {
+  static notFound(message?: string, errors?: Record<string, string>) {
     return new ApiError({
-      message: 'not found',
+      message: message ?? 'Not found',
       errors,
       status: 404,
     })

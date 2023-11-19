@@ -3,7 +3,7 @@ import { User, UserModel } from '../models/User.js'
 import { v4 as uuidv4 } from 'uuid'
 import { emailService } from './email.service.js'
 
-function getAllActivated() {
+const getAllActivated = () => {
   return User.findAll({
     where: {
       activationToken: null,
@@ -11,17 +11,17 @@ function getAllActivated() {
   })
 }
 
-function normalize(data: UserModel) {
+const normalize = (data: UserModel) => {
   const { id, email } = data
 
   return { id, email }
 }
 
-function findByEmail(email: string) {
+const findByEmail = (email: string) => {
   return User.findOne({ where: { email } })
 }
 
-async function register(email: string, password: string) {
+const register = async (email: string, password: string) => {
   const activationToken = uuidv4()
 
   const existUser = await findByEmail(email)
@@ -35,10 +35,10 @@ async function register(email: string, password: string) {
   emailService.sendActivationEmail(email, activationToken)
 }
 
-function validateInputs(
+const validateInputs = (
   email: string,
   password: string,
-): Record<string, string> {
+): Record<string, string> => {
   const errors: Record<string, string> = {
     email: '',
     password: '',

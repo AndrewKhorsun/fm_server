@@ -4,8 +4,7 @@ import { userService } from '../services/user.service.js'
 import { jwtService } from '../services/jwt.service.js'
 import { ApiError } from '../exeption/api.error.js'
 import bcrypt from 'bcrypt'
-import cookieParser from 'cookie-parser'
-import { JwtPayload } from 'jsonwebtoken'
+import { tokenService } from '../services/token.service.js'
 
 const register = async (req: Request, res: Response) => {
   const { email, password } = req.body
@@ -33,7 +32,7 @@ const activate = async (req: Request, res: Response) => {
   }
 
   user.activationToken = null
-  user.save()
+  await user.save()
 
   res.send(user)
 }
@@ -54,27 +53,51 @@ const login = async (req: Request, res: Response) => {
   await sendAuthentication(res, user)
 }
 
-const refresh = async (req: Request, res: Response) => {
+const logout = async (req: Request, res: Response) => {
   const { refreshToken } = req.cookies
   const userData = jwtService.validateRefreshToken(refreshToken)
 
-  if (!userData || typeof userData === 'string') {
+  res.clearCookie('refreshToken')
+
+  if (!userData || !refreshToken) {
     throw ApiError.unauthorized()
+  }
+
+  if (typeof userData !== 'string') {
+    await tokenService.remove(userData.id)
+  }
+
+  res.sendStatus(204)
+}
+
+const refresh = async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies
+  const userData = jwtService.validateRefreshToken(refreshToken)
+  const token = await tokenService.getByToken(refreshToken)
+
+  if (!userData || typeof userData === 'string' || !token) {
+    throw ApiError.unauthorized('Invalid refresh token')
   }
 
   const user = await userService.findByEmail(userData?.email)
 
   if (!user) {
-    throw ApiError.notFound()
+    throw ApiError.notFound('User not found')
   }
 
   await sendAuthentication(res, user)
 }
 
-async function sendAuthentication(res: Response, user: UserModel) {
+const sendAuthentication = async (res: Response, user: UserModel) => {
   const userData = userService.normalize(user)
   const accessToken = jwtService.generateAccessToken(userData)
   const refreshToken = jwtService.generateRefreshToken(userData)
+
+  if (!userData.id) {
+    throw ApiError.notFound()
+  }
+
+  await tokenService.save(userData.id, refreshToken)
 
   res.cookie('refreshToken', refreshToken, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -92,4 +115,5 @@ export const authController = {
   activate,
   login,
   refresh,
+  logout,
 }

@@ -18,7 +18,7 @@ interface EmailBody {
   html: string
 }
 
-function send({ email, subject, html }: EmailBody) {
+const send = ({ email, subject, html }: EmailBody) => {
   return transporter.sendMail({
     to: email,
     subject,
@@ -26,7 +26,7 @@ function send({ email, subject, html }: EmailBody) {
   })
 }
 
-function sendActivationEmail(email: string, token: string) {
+const sendActivationEmail = (email: string, token: string) => {
   const href = `${process.env.CLIENT_HOST}/activate/${token}`
   const html = `
   <h1>Activate account</h1>
