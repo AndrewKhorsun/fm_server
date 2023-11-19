@@ -24,7 +24,7 @@ export class ApiError extends Error {
 
   static unauthorized(errors?: Record<string, string>) {
     return new ApiError({
-      message: 'unauthorized user',
+      message: 'User is not authorized',
       errors,
       status: 401,
     })

@@ -1,47 +1,22 @@
 import { Request, Response } from 'express'
-import { User } from '../models/user.js'
+import { User } from '../models/User.js'
 import { userService } from '../services/user.service.js'
 import { jwtService } from '../services/jwt.service.js'
 import { ApiError } from '../exeption/api.error.js'
-
-function validateEmail(value: string) {
-  if (!value) {
-    return 'Email is required'
-  }
-
-  const emailPattern = /^[\w.+-]+@([\w-]+\.){1,3}[\w-]{2,}$/
-
-  if (!emailPattern.test(value)) {
-    return 'Email is not valid'
-  }
-
-  return ''
-}
-
-function validatePassword(value: string) {
-  if (!value) {
-    return 'Password is required'
-  }
-
-  if (value.length < 6) {
-    return 'At least 6 characters'
-  }
-  return ''
-}
+import bcrypt from 'bcrypt'
 
 const register = async (req: Request, res: Response) => {
   const { email, password } = req.body
 
-  const errors = {
-    email: validateEmail(email),
-    password: validatePassword(password),
-  }
+  const errors = userService.validateInputs(email, password)
 
   if (errors.email || errors.password) {
     throw ApiError.badRequest('Invalidate data', errors)
   }
 
-  await userService.register(email, password)
+  const hashedPass = await bcrypt.hash(password, 10)
+
+  await userService.register(email, hashedPass)
 
   res.send({ message: 'OK' })
 }
@@ -66,9 +41,12 @@ const login = async (req: Request, res: Response) => {
 
   const user = await userService.findByEmail(email)
 
-  if (!user || user.password !== password) {
-    res.send(401)
-    return
+  const isPasswordValid = await bcrypt.compare(password, user?.password ?? '')
+
+  if (!user || !isPasswordValid) {
+    throw ApiError.badRequest(
+      'Invalid login or password information. Please try again.',
+    )
   }
 
   const normalizedUser = userService.normalize(user)
@@ -79,6 +57,7 @@ const login = async (req: Request, res: Response) => {
     accessToken,
   })
 }
+
 export const authController = {
   register,
   activate,

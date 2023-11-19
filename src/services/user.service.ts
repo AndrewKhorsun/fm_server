@@ -1,5 +1,5 @@
 import { ApiError } from '../exeption/api.error.js'
-import { User, UserModel } from '../models/user.js'
+import { User, UserModel } from '../models/User.js'
 import { v4 as uuidv4 } from 'uuid'
 import { emailService } from './email.service.js'
 
@@ -27,12 +27,39 @@ async function register(email: string, password: string) {
   const existUser = await findByEmail(email)
 
   if (existUser) {
-    throw ApiError.badRequest('User alredy exist', {
-      email: 'User alredy exist',
+    throw ApiError.badRequest('User already exist', {
+      email: 'User already exist',
     })
   }
   await User.create({ email, password, activationToken })
   emailService.sendActivationEmail(email, activationToken)
+}
+
+function validateInputs(
+  email: string,
+  password: string,
+): Record<string, string> {
+  const errors: Record<string, string> = {
+    email: '',
+    password: '',
+  }
+
+  if (!email) {
+    errors.email = 'Email is required'
+  } else {
+    const emailPattern = /^[\w.+-]+@([\w-]+\.){1,3}[\w-]{2,}$/
+    if (!emailPattern.test(email)) {
+      errors.email = 'Email is not valid'
+    }
+  }
+
+  if (!password) {
+    errors.password = 'Password is required'
+  } else if (password.length < 6) {
+    errors.password = 'At least 6 characters'
+  }
+
+  return errors
 }
 
 export const userService = {
@@ -40,4 +67,5 @@ export const userService = {
   normalize,
   findByEmail,
   register,
+  validateInputs,
 }

@@ -4,10 +4,12 @@ import { authRouter } from './routs/auth.rout.js'
 import cors from 'cors'
 import { userRouter } from './routs/user.route.js'
 import { errorMiddleware } from './middlewares/errorMiddleware.js'
+import coockieParser from 'cookie-parser'
 
 const PORT = process.env.PORT || 3005
 const app = express()
 app.use(express.json())
+app.use(coockieParser())
 
 app.use(
   cors({

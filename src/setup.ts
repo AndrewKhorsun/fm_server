@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { sequelize } from './utils/db.js'
-import './models/user.js'
+import './models/User.js'
 import './models/costsList.js'
 
 sequelize
