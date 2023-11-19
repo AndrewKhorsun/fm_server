@@ -10,3 +10,4 @@ authRouter.get(
   catchError(authController.activate),
 )
 authRouter.post('/login', catchError(authController.login))
+authRouter.post('/refresh', catchError(authController.refresh))

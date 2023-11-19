@@ -1,9 +1,11 @@
 import { Request, Response } from 'express'
-import { User } from '../models/User.js'
+import { User, UserModel } from '../models/User.js'
 import { userService } from '../services/user.service.js'
 import { jwtService } from '../services/jwt.service.js'
 import { ApiError } from '../exeption/api.error.js'
 import bcrypt from 'bcrypt'
+import cookieParser from 'cookie-parser'
+import { JwtPayload } from 'jsonwebtoken'
 
 const register = async (req: Request, res: Response) => {
   const { email, password } = req.body
@@ -49,11 +51,38 @@ const login = async (req: Request, res: Response) => {
     )
   }
 
-  const normalizedUser = userService.normalize(user)
-  const accessToken = jwtService.sign(normalizedUser)
+  await sendAuthentication(res, user)
+}
+
+const refresh = async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies
+  const userData = jwtService.validateRefreshToken(refreshToken)
+
+  if (!userData || typeof userData === 'string') {
+    throw ApiError.unauthorized()
+  }
+
+  const user = await userService.findByEmail(userData?.email)
+
+  if (!user) {
+    throw ApiError.notFound()
+  }
+
+  await sendAuthentication(res, user)
+}
+
+async function sendAuthentication(res: Response, user: UserModel) {
+  const userData = userService.normalize(user)
+  const accessToken = jwtService.generateAccessToken(userData)
+  const refreshToken = jwtService.generateRefreshToken(userData)
+
+  res.cookie('refreshToken', refreshToken, {
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  })
 
   res.send({
-    user: normalizedUser,
+    user: userData,
     accessToken,
   })
 }
@@ -62,4 +91,5 @@ export const authController = {
   register,
   activate,
   login,
+  refresh,
 }

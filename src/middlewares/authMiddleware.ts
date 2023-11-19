@@ -14,7 +14,7 @@ export const authMiddleWare = (
     return
   }
 
-  const userData = jwtService.verify(token)
+  const userData = jwtService.validateAccessToken(token)
 
   if (!userData) {
     res.sendStatus(401)
