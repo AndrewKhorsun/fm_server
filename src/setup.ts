@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { sequelize } from './utils/db.js'
 import './models/User.js'
-import './models/costsList.js'
+import './models/PersonalTable.js'
 import './models/Token.js'
 
 sequelize

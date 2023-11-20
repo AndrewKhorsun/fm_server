@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import 'dotenv/config'
 
 interface Sign {
-  id: string | undefined
+  id: number | undefined
   email: string
 }
 

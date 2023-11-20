@@ -4,7 +4,7 @@ import { User } from './User.js'
 
 interface TokenAttributes {
   refreshToken: string
-  userId: string
+  userId: number
 }
 
 interface TokenInstance extends Model<TokenAttributes>, TokenAttributes {}
@@ -15,7 +15,7 @@ export const Token = sequelize.define<TokenInstance>('token', {
     allowNull: false,
   },
   userId: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 })

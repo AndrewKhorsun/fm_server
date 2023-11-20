@@ -1,6 +1,6 @@
 import { Token } from '../models/Token.js'
 
-const save = async (userId: string, newToken: string) => {
+const save = async (userId: number, newToken: string) => {
   const token = await Token.findOne({
     where: { userId },
   })

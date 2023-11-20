@@ -5,7 +5,7 @@ export interface UserCreationAttributes {
   email: string
   password: string
   activationToken: string | null
-  id?: string
+  id?: number
 }
 
 export interface UserModel
