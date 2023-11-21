@@ -11,6 +11,10 @@ const getAllActivated = () => {
   })
 }
 
+const findById = (id: number) => {
+  return User.findOne({ where: { id } })
+}
+
 const normalize = (data: UserModel) => {
   const { id, email } = data
 
@@ -68,4 +72,5 @@ export const userService = {
   findByEmail,
   register,
   validateInputs,
+  findById
 }
