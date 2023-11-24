@@ -4,10 +4,8 @@ import { User } from './User.js'
 
 export interface PersonalTableAttributes {
   userId: number
-  house?: number
-  car?: number
-  study?: number
-  cafe?: number
+  category: string
+  amount: number
 }
 
 export interface PersonalTable
@@ -15,21 +13,13 @@ export interface PersonalTable
     PersonalTableAttributes {}
 
 export const PersonalTable = sequelize.define<PersonalTable>('PersonalTable', {
-  house: {
-    type: DataTypes.INTEGER,
-    allowNull:true
+  category: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
-  car: {
+  amount: {
     type: DataTypes.INTEGER,
-    allowNull:true
-  },
-  study: {
-    type: DataTypes.INTEGER,
-    allowNull:true
-  },
-  cafe: {
-    type: DataTypes.INTEGER,
-    allowNull:true
+    allowNull: false,
   },
   userId: {
     type: DataTypes.INTEGER,

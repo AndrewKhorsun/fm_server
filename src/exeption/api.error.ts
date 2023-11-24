@@ -37,4 +37,20 @@ export class ApiError extends Error {
       status: 404,
     })
   }
+
+  static forbidden(message?: string, errors?: Record<string, string>) {
+    return new ApiError({
+      message: message ?? 'Access forbidden',
+      errors,
+      status: 403,
+    })
+  }
+
+  static internalServer(message?: string, errors?: Record<string, string>) {
+    return new ApiError({
+      message: message ?? 'Internal Server Error',
+      errors,
+      status: 500,
+    })
+  }
 }

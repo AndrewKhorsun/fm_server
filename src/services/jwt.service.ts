@@ -12,7 +12,7 @@ const generateAccessToken = (user: Sign) => {
   }
 
   const token = jwt.sign(user, process.env.JWT_ACCESS_SECRET, {
-    expiresIn: '5s',
+    expiresIn: '60s',
   })
 
   return token
