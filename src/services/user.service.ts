@@ -1,4 +1,4 @@
-import { ApiError } from '../exeption/api.error.js'
+import { ApiError } from '../exeption/ApiError.js'
 import { User, UserModel } from '../models/User.js'
 import { v4 as uuidv4 } from 'uuid'
 import { emailService } from './email.service.js'
@@ -32,7 +32,7 @@ const register = async (email: string, password: string) => {
   const familyName: string = ''
 
   if (existUser) {
-    throw ApiError.badRequest('User already exist', {
+    throw ApiError.BadRequest('User already exist', {
       email: 'User already exist',
     })
   }

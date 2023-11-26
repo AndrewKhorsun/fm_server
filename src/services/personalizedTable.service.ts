@@ -1,4 +1,4 @@
-import { ApiError } from '../exeption/api.error.js'
+import { ApiError } from '../exeption/ApiError.js'
 import {
   PersonalizedTable,
   PersonalizedTableAttributes,
@@ -14,7 +14,7 @@ const getAllPersonalizedData = async (userId: number) => {
     })
 
     if (!result || result.length === 0) {
-      throw ApiError.notFound()
+      throw ApiError.NotFound()
     }
 
     return result
@@ -26,7 +26,7 @@ const getAllPersonalizedData = async (userId: number) => {
         errors: error.errors,
       }
     } else {
-      throw ApiError.badRequest('Something went wrong')
+      throw ApiError.BadRequest('Something went wrong')
     }
   }
 }
@@ -38,7 +38,7 @@ const addPersonalizedData = async (
   const user = await userService.findById(userId)
 
   if (!user || !user.id) {
-    throw ApiError.notFound('User with this ID not found')
+    throw ApiError.NotFound('User with this ID not found')
   }
 
   const personalData = await PersonalizedTable.create({

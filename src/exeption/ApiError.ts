@@ -14,7 +14,7 @@ export class ApiError extends Error {
     this.errors = errors
   }
 
-  static badRequest(message: string, errors?: Record<string, string>) {
+  static BadRequest(message: string, errors?: Record<string, string>) {
     return new ApiError({
       message,
       errors,
@@ -22,7 +22,7 @@ export class ApiError extends Error {
     })
   }
 
-  static unauthorized(message?: string, errors?: Record<string, string>) {
+  static Unauthorized(message?: string, errors?: Record<string, string>) {
     return new ApiError({
       message: message ?? 'User is not authorized',
       errors,
@@ -30,7 +30,7 @@ export class ApiError extends Error {
     })
   }
 
-  static notFound(message?: string, errors?: Record<string, string>) {
+  static NotFound(message?: string, errors?: Record<string, string>) {
     return new ApiError({
       message: message ?? 'Not found',
       errors,
@@ -38,7 +38,7 @@ export class ApiError extends Error {
     })
   }
 
-  static forbidden(message?: string, errors?: Record<string, string>) {
+  static Forbidden(message?: string, errors?: Record<string, string>) {
     return new ApiError({
       message: message ?? 'Access forbidden',
       errors,
@@ -46,7 +46,7 @@ export class ApiError extends Error {
     })
   }
 
-  static internalServer(message?: string, errors?: Record<string, string>) {
+  static InternalServer(message?: string, errors?: Record<string, string>) {
     return new ApiError({
       message: message ?? 'Internal Server Error',
       errors,

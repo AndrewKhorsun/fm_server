@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { PersonalizedTableService } from '../services/personalizedTable.service.js'
 import { tokenService } from '../services/token.service.js'
-import { ApiError } from '../exeption/api.error.js'
+import { ApiError } from '../exeption/ApiError.js'
 import { PersonalizedTableAttributes } from '../models/PersonalizedTable.js'
 
 const getAllRows = async (req: Request, res: Response) => {
@@ -10,7 +10,7 @@ const getAllRows = async (req: Request, res: Response) => {
   const user = await tokenService.getByToken(refreshToken)
 
   if (!user?.userId) {
-    throw ApiError.notFound('User not found')
+    throw ApiError.NotFound('User not found')
   }
 
   const table = await PersonalizedTableService.getAllPersonalizedData(
@@ -18,7 +18,7 @@ const getAllRows = async (req: Request, res: Response) => {
   )
 
   if (!Array.isArray(table)) {
-    throw ApiError.notFound('User data not found')
+    throw ApiError.NotFound('User data not found')
   }
   res.send(table.map(el => el.dataValues))
 }
@@ -30,7 +30,7 @@ const updateTable = async (req: Request, res: Response) => {
   const data: PersonalizedTableAttributes = req.body
 
   if (!user?.userId) {
-    throw ApiError.notFound('User not found')
+    throw ApiError.NotFound('User not found')
   }
 
   await PersonalizedTableService.addPersonalizedData(user?.userId, data)

@@ -1,4 +1,4 @@
-import { ApiError } from '../exeption/api.error.js'
+import { ApiError } from '../exeption/ApiError.js'
 import { FamilyTable, FamilyTableAttributes } from '../models/FamilyTable.js'
 import { User } from '../models/User.js'
 import { userService } from './user.service.js'
@@ -12,7 +12,7 @@ const getAllFamilyData = async (familyName: string) => {
     })
 
     if (!result || result.length === 0) {
-      throw ApiError.notFound()
+      throw ApiError.NotFound()
     }
 
     return result
@@ -24,7 +24,7 @@ const getAllFamilyData = async (familyName: string) => {
         errors: error.errors,
       }
     } else {
-      throw ApiError.badRequest('Something went wrong')
+      throw ApiError.BadRequest('Something went wrong')
     }
   }
 }
@@ -33,11 +33,11 @@ const addFamilyData = async (userId: number, value: FamilyTableAttributes) => {
   const user = await userService.findById(userId)
 
   if (!user || !user.id) {
-    throw ApiError.notFound('User with this ID not found')
+    throw ApiError.NotFound('User with this ID not found')
   }
 
   if (!user.familyName) {
-    throw ApiError.notFound('family name not found')
+    throw ApiError.NotFound('family name not found')
   }
 
   const personalData = await FamilyTable.create({
@@ -52,11 +52,11 @@ const createFamilyTable = async (userId: number, familyName: string) => {
   const user = await User.findByPk(userId)
 
   if (!user) {
-    throw ApiError.notFound('User not found')
+    throw ApiError.NotFound('User not found')
   }
 
   if (!user || user.familyFlag) {
-    throw ApiError.forbidden('User already has family table')
+    throw ApiError.Forbidden('User already has family table')
   }
 
   console.log('----------')
@@ -73,11 +73,11 @@ const deleteFamilyName = async (userId: number) => {
   const user = await User.findByPk(userId)
 
   if (!user) {
-    throw ApiError.notFound('User not found')
+    throw ApiError.NotFound('User not found')
   }
 
   if (user.familyName === null) {
-    throw ApiError.notFound('User does not have family name')
+    throw ApiError.NotFound('User does not have family name')
   }
 
   user.familyFlag = false

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { tokenService } from '../services/token.service.js'
-import { ApiError } from '../exeption/api.error.js'
+import { ApiError } from '../exeption/ApiError.js'
 import { FamilyTableService } from '../services/familyTable.service.js'
 import { FamilyTableAttributes } from '../models/FamilyTable.js'
 
@@ -11,7 +11,7 @@ const createFamilyTable = async (req: Request, res: Response) => {
   const user = await tokenService.getByToken(refreshToken)
 
   if (!user?.userId) {
-    throw ApiError.notFound('User not found')
+    throw ApiError.NotFound('User not found')
   }
 
   await FamilyTableService.createFamilyTable(user?.userId, familyName)
@@ -24,7 +24,7 @@ const deleteFamilyName = async (req: Request, res: Response) => {
   const user = await tokenService.getByToken(refreshToken)
 
   if (!user?.userId) {
-    throw ApiError.notFound('User not found')
+    throw ApiError.NotFound('User not found')
   }
 
   await FamilyTableService.deleteFamilyName(user?.userId)
@@ -39,7 +39,7 @@ const updateFamilyData = async (req: Request, res: Response) => {
   const data: FamilyTableAttributes = req.body
 
   if (!user?.userId) {
-    throw ApiError.notFound('User not found')
+    throw ApiError.NotFound('User not found')
   }
 
   const test = await FamilyTableService.addFamilyData(user?.userId, {

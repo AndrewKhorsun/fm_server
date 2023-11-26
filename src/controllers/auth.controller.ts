@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { User, UserModel } from '../models/User.js'
 import { userService } from '../services/user.service.js'
 import { jwtService } from '../services/jwt.service.js'
-import { ApiError } from '../exeption/api.error.js'
+import { ApiError } from '../exeption/ApiError.js'
 import bcrypt from 'bcrypt'
 import { tokenService } from '../services/token.service.js'
 
@@ -12,7 +12,7 @@ const register = async (req: Request, res: Response) => {
   const errors = userService.validateInputs(email, password)
 
   if (errors.email || errors.password) {
-    throw ApiError.badRequest('Invalidate data', errors)
+    throw ApiError.BadRequest('Invalid data', errors)
   }
 
   const hashedPass = await bcrypt.hash(password, 10)
@@ -45,7 +45,7 @@ const login = async (req: Request, res: Response) => {
   const isPasswordValid = await bcrypt.compare(password, user?.password ?? '')
 
   if (!user || !isPasswordValid) {
-    throw ApiError.badRequest(
+    throw ApiError.BadRequest(
       'Invalid login or password information. Please try again.',
     )
   }
@@ -60,7 +60,7 @@ const logout = async (req: Request, res: Response) => {
   res.clearCookie('refreshToken')
 
   if (!userData || !refreshToken) {
-    throw ApiError.unauthorized()
+    throw ApiError.Unauthorized()
   }
 
   if (typeof userData !== 'string') {
@@ -76,13 +76,13 @@ const refresh = async (req: Request, res: Response) => {
   const token = await tokenService.getByToken(refreshToken)
 
   if (!userData || typeof userData === 'string' || !token) {
-    throw ApiError.unauthorized('Invalid refresh token')
+    throw ApiError.Unauthorized('Invalid refresh token')
   }
 
   const user = await userService.findByEmail(userData?.email)
 
   if (!user) {
-    throw ApiError.notFound('User not found')
+    throw ApiError.NotFound('User not found')
   }
 
   await sendAuthentication(res, user)
@@ -94,7 +94,7 @@ const sendAuthentication = async (res: Response, user: UserModel) => {
   const refreshToken = jwtService.generateRefreshToken(userData)
 
   if (!userData.id) {
-    throw ApiError.notFound()
+    throw ApiError.NotFound()
   }
 
   await tokenService.save(userData.id, refreshToken)
