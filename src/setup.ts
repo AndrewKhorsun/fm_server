@@ -1,8 +1,9 @@
 import 'dotenv/config'
 import { sequelize } from './utils/db.js'
 import './models/User.js'
-import './models/PersonalTable.js'
+import './models/PersonalizedTable.js'
 import './models/Token.js'
+import './models/FamilyTable.js'
 
 sequelize
   .sync({ force: true })

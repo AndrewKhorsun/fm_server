@@ -7,15 +7,17 @@ export const errorMiddleware: ErrorRequestHandler = (
   res: Response,
 ) => {
   if (error instanceof ApiError) {
-    const { status, message, errors } = error;
+    error
 
-    res.status(status).send({ message, errors });
-    return;
+    res
+      .status(error.status)
+      .send({ message: error.message, errors: error.errors })
+    return
   }
 
-  console.debug(error);
+  console.debug(error)
 
   res.status(500).send({
     message: 'Unexpected error',
-  });
+  })
 }

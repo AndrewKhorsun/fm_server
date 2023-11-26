@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { personalTableService } from '../services/personalTable.service.js'
+import { PersonalizedTableService } from '../services/personalizedTable.service.js'
 import { tokenService } from '../services/token.service.js'
 import { ApiError } from '../exeption/api.error.js'
-import { PersonalTableAttributes } from '../models/PersonalTable.js'
+import { PersonalizedTableAttributes } from '../models/PersonalizedTable.js'
 
 const getAllRows = async (req: Request, res: Response) => {
   const { refreshToken } = req.cookies
@@ -13,7 +13,9 @@ const getAllRows = async (req: Request, res: Response) => {
     throw ApiError.notFound('User not found')
   }
 
-  const table = await personalTableService.getAllTable(user?.userId)
+  const table = await PersonalizedTableService.getAllPersonalizedData(
+    user?.userId,
+  )
 
   if (!Array.isArray(table)) {
     throw ApiError.notFound('User data not found')
@@ -25,20 +27,20 @@ const updateTable = async (req: Request, res: Response) => {
   const { refreshToken } = req.cookies
 
   const user = await tokenService.getByToken(refreshToken)
-  const data: PersonalTableAttributes = req.body
+  const data: PersonalizedTableAttributes = req.body
 
   if (!user?.userId) {
     throw ApiError.notFound('User not found')
   }
 
-  await personalTableService.insertPersonalData(user?.userId, data)
+  await PersonalizedTableService.addPersonalizedData(user?.userId, data)
 
   const table = await getAllRows(req, res)
 
   res.send(table)
 }
 
-export const personalTableController = {
+export const PersonalizedTableController = {
   getAllRows,
   updateTable,
 }

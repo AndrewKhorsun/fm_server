@@ -6,6 +6,8 @@ export interface UserCreationAttributes {
   password: string
   activationToken: string | null
   id?: number
+  familyName: string | null
+  familyFlag: boolean
 }
 
 export interface UserModel
@@ -17,6 +19,7 @@ export const User = sequelize.define<UserModel>('user', {
     allowNull: false,
     unique: true,
   },
+
   password: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -24,5 +27,15 @@ export const User = sequelize.define<UserModel>('user', {
 
   activationToken: {
     type: DataTypes.STRING,
+  },
+
+  familyName: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+
+  familyFlag: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
   },
 })

@@ -2,17 +2,18 @@ import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../utils/db.js'
 import { User } from './User.js'
 
-export interface PersonalTableAttributes {
-  userId: number
+export interface FamilyTableAttributes {
+  familyName: string
   category: string
   amount: number
+  userId?: number
 }
 
-export interface PersonalTable
-  extends Model<PersonalTableAttributes>,
-    PersonalTableAttributes {}
+export interface FamilyTable
+  extends Model<FamilyTableAttributes>,
+    FamilyTableAttributes {}
 
-export const PersonalTable = sequelize.define<PersonalTable>('PersonalTable', {
+export const FamilyTable = sequelize.define<FamilyTable>('FamilyTable', {
   category: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -21,10 +22,10 @@ export const PersonalTable = sequelize.define<PersonalTable>('PersonalTable', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  userId: {
-    type: DataTypes.INTEGER,
+  familyName: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
 })
 
-PersonalTable.belongsTo(User)
+FamilyTable.belongsTo(User)
