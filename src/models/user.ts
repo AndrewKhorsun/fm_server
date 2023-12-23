@@ -8,6 +8,7 @@ export interface UserCreationAttributes {
   id?: number
   familyName: string | null
   familyFlag: boolean
+  userName: string
 }
 
 export interface UserModel
@@ -21,6 +22,11 @@ export const User = sequelize.define<UserModel>('user', {
   },
 
   password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+
+  userName: {
     type: DataTypes.STRING,
     allowNull: false,
   },

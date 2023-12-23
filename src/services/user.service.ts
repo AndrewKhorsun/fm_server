@@ -16,16 +16,16 @@ const findById = (id: number) => {
 }
 
 const normalize = (data: UserModel) => {
-  const { id, email } = data
+  const { id, email, userName } = data
 
-  return { id, email }
+  return { id, email, userName }
 }
 
 const findByEmail = (email: string) => {
   return User.findOne({ where: { email } })
 }
 
-const register = async (email: string, password: string) => {
+const register = async (email: string, password: string, userName: string) => {
   const activationToken = uuidv4()
   const existUser = await findByEmail(email)
   const familyFlag: boolean = false
@@ -42,6 +42,7 @@ const register = async (email: string, password: string) => {
     activationToken,
     familyFlag,
     familyName,
+    userName,
   })
   emailService.sendActivationEmail(email, activationToken)
 }
@@ -49,10 +50,12 @@ const register = async (email: string, password: string) => {
 const validateInputs = (
   email: string,
   password: string,
+  userName: string,
 ): Record<string, string> => {
   const errors: Record<string, string> = {
     email: '',
     password: '',
+    userName: '',
   }
 
   if (!email) {
@@ -67,7 +70,11 @@ const validateInputs = (
   if (!password) {
     errors.password = 'Password is required'
   } else if (password.length < 6) {
-    errors.password = 'At least 6 characters'
+    errors.password = 'Password must be at least 6 characters long'
+  }
+
+  if (!userName) {
+    errors.userName = 'User name is required'
   }
 
   return errors

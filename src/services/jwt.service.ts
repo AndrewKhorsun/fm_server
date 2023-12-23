@@ -12,7 +12,7 @@ const generateAccessToken = (user: Sign) => {
   }
 
   const token = jwt.sign(user, process.env.JWT_ACCESS_SECRET, {
-    expiresIn: '60s',
+    expiresIn: '1800s',
   })
 
   return token
@@ -36,7 +36,7 @@ const generateRefreshToken = (user: Sign) => {
   }
 
   const token = jwt.sign(user, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: '2500000s',
+    expiresIn: '2592000s',
   })
 
   return token

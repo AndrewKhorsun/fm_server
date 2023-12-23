@@ -59,10 +59,6 @@ const createFamilyTable = async (userId: number, familyName: string) => {
     throw ApiError.Forbidden('User already has family table')
   }
 
-  console.log('----------')
-  console.log(familyName)
-  console.log('----------')
-
   user.familyName = familyName
   user.familyFlag = true
 

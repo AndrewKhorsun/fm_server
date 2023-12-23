@@ -7,19 +7,22 @@ import bcrypt from 'bcrypt'
 import { tokenService } from '../services/token.service.js'
 
 const register = async (req: Request, res: Response) => {
-  const { email, password } = req.body
+  const { email, password, userName } = req.body
 
-  const errors = userService.validateInputs(email, password)
+  const errors = userService.validateInputs(email, password, userName)
 
-  if (errors.email || errors.password) {
+  if (errors.email || errors.password || errors.userName) {
     throw ApiError.BadRequest('Invalid data', errors)
   }
 
   const hashedPass = await bcrypt.hash(password, 10)
 
-  await userService.register(email, hashedPass)
+  await userService.register(email, hashedPass, userName)
 
-  res.send({ message: 'OK' })
+  res.send({
+    message:
+      'Success! Your account confirmation letter has been sent to your e-mail address',
+  })
 }
 
 const activate = async (req: Request, res: Response) => {
@@ -27,20 +30,25 @@ const activate = async (req: Request, res: Response) => {
   const user = await User.findOne({ where: { activationToken } })
 
   if (!user) {
-    res.sendStatus(404)
-    return
+    throw ApiError.NotFound('User not found or already activated.')
   }
 
   user.activationToken = null
   await user.save()
 
-  res.send(user)
+  res.send(userService.normalize(user))
 }
 
 const login = async (req: Request, res: Response) => {
   const { email, password } = req.body
 
   const user = await userService.findByEmail(email)
+
+  if (user?.activationToken) {
+    throw ApiError.BadRequest(
+      'Please activate your account. The activation letter is in your mailbox.',
+    )
+  }
 
   const isPasswordValid = await bcrypt.compare(password, user?.password ?? '')
 
