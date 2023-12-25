@@ -7,6 +7,7 @@ export interface FamilyTableAttributes {
   category: string
   amount: number
   userId?: number
+  transactionType: string
 }
 
 export interface FamilyTable
@@ -23,6 +24,10 @@ export const FamilyTable = sequelize.define<FamilyTable>('FamilyTable', {
     allowNull: false,
   },
   familyName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  transactionType: {
     type: DataTypes.STRING,
     allowNull: false,
   },

@@ -6,6 +6,7 @@ export interface PersonalizedTableAttributes {
   userId: number
   category: string
   amount: number
+  transactionType: string
 }
 
 export interface PersonalizedTable
@@ -25,6 +26,10 @@ export const PersonalizedTable = sequelize.define<PersonalizedTable>(
     },
     userId: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    transactionType: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },
