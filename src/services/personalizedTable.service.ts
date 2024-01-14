@@ -4,17 +4,25 @@ import {
   PersonalizedTableAttributes,
 } from '../models/PersonalizedTable.js'
 import { userService } from './user.service.js'
+import { Op } from 'sequelize'
 
-const getAllPersonalizedData = async (userId: number) => {
+const getAllPersonalizedData = async (
+  userId: number,
+  startDate: string,
+  endDate: string,
+) => {
   try {
     const result = await PersonalizedTable.findAll({
       where: {
         userId,
+        updatedAt: {
+          [Op.between]: [new Date(startDate), new Date(endDate)],
+        },
       },
     })
 
     if (!result || result.length === 0) {
-      throw ApiError.NotFound()
+      throw ApiError.NotFound('No data for the selected month')
     }
 
     return result

@@ -7,6 +7,8 @@ export interface PersonalizedTableAttributes {
   category: string
   amount: number
   transactionType: string
+  totalBudget: number
+  updatedAt?: Date
 }
 
 export interface PersonalizedTable
@@ -31,6 +33,9 @@ export const PersonalizedTable = sequelize.define<PersonalizedTable>(
     transactionType: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    totalBudget: {
+      type: DataTypes.INTEGER,
     },
   },
 )
